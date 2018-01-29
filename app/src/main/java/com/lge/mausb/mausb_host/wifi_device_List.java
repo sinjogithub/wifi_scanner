@@ -45,7 +45,10 @@ public class wifi_device_List extends AppCompatActivity {
             refreshScanList = wifiManager.getScanResults ();
             Log.d(TAG, "Scan result " + refreshScanList );
             for(int i = 0; i < refreshScanList.size (); i++){
-                connections.add ( refreshScanList.get ( i ).SSID );
+                if(!refreshScanList.get ( i ).SSID.isEmpty()){
+                    connections.add ( refreshScanList.get ( i ).SSID );
+                }
+
             }
 
             Log.d(TAG, "CONNECTIONS: " + connections);
@@ -57,9 +60,11 @@ public class wifi_device_List extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate ( savedInstanceState );
 
+        setContentView ( R.layout.activity_wifi_device__list );
 
-        //ListView listView = (ListView) findViewById ( R.id.wifi_list );
-        TextView textView = (TextView)findViewById ( R.id.textView3 );
+
+        ListView listView =  findViewById ( R.id.wifi_list );
+        //TextView textView = (TextView)findViewById ( R.id.textView2 );
 
         IntentFilter intentFilter = new IntentFilter ( wifiManager.SCAN_RESULTS_AVAILABLE_ACTION  );
 
@@ -69,7 +74,10 @@ public class wifi_device_List extends AppCompatActivity {
 
 
 
-        adapter = new ArrayAdapter<String> ( this, R.layout.activity_wifi_device__list, R.id.textView3, connections);
+        adapter = new ArrayAdapter<> ( this, R.layout.activity_wifi_device__list, R.id.wifi_text, connections);
+        //adapter = new ArrayAdapter<String> ( this, R.layout.activity_wifi_device__list, R.id.textView2, connections);
+
+        listView.setAdapter(adapter);
 
         registerReceiver ( wifiScanReceiver, new IntentFilter ( wifiManager.SCAN_RESULTS_AVAILABLE_ACTION ) );
 
@@ -85,7 +93,7 @@ public class wifi_device_List extends AppCompatActivity {
             //do something, permission was previously granted; or legacy device
         }
 
-        setContentView ( R.layout.activity_wifi_device__list );
+
     }
 
     @Override
